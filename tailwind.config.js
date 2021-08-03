@@ -12,7 +12,8 @@ module.exports = {
       gray: colors.trueGray,
       red: colors.rose,
       indigo: colors.indigo,
-      purple: colors.purple
+      purple: colors.purple,
+      yellow: colors.yellow
     },
     screens: {
       'sm': '640px',
@@ -32,7 +33,8 @@ module.exports = {
     },
     extend: {
       colors: {
-          bg_dark:'#121212'
+          bg_dark:'#121212',
+          primary: '#352464'
       },
       backgroundOpacity: {
           '8':'0.08'
