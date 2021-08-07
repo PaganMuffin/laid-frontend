@@ -9,6 +9,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
 }
 
 code {
@@ -16,10 +17,14 @@ code {
     monospace;
 }
 
-.bar1 {
-  width: 35px;
-  height: 3px;
-  background-color:white;
-  margin: 6px 0;
-  transition: 0.4s;
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
 }

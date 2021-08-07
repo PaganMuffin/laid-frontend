@@ -10,10 +10,15 @@ module.exports = {
       black: colors.black,
       white: colors.white,
       gray: colors.trueGray,
-      red: colors.rose,
+      red: colors.red,
       indigo: colors.indigo,
       purple: colors.purple,
-      yellow: colors.yellow
+      yellow: colors.yellow,
+      orange: colors.orange,
+      cyan: colors.cyan,
+      fuchsia: colors.fuchsia,
+      rose: colors.rose,
+      blue: colors.blue
     },
     screens: {
       'sm': '640px',
@@ -42,7 +47,9 @@ module.exports = {
     },
   },
   variants: {
-    extend: {},
+    extend: {
+        fontSize: ['active'],
+    },
   },
   plugins: [],
 }

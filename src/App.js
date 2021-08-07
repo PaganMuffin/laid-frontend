@@ -1,28 +1,35 @@
 import { useEffect } from "react";
 import { Route, Switch, useLocation } from "react-router-dom";
-import Home from "./pages/Home";
 import NavBar from "./component/NavBar";
+import Home from "./pages/Home";
 const title = "NomNom"
 
 
 const App = (props) => {
     let location = useLocation()
-
+    let eff = 
     useEffect(() => {
-        document.documentElement.classList.add('dark')
+        //document.documentElement.classList.add('dark')
+        document.body.classList.add('bg-bg_dark')
+        document.body.classList.add('bg-opacity-10')
     },[])
 
     return (
-        <div className="dark:bg-bg_dark w-full min-h-screen">
-            <NavBar 
-                title={title} 
-                username="PaganMuffin" 
-                avatar_url="https://cdn.discordapp.com/avatars/206533377820590082/a0811702ac8bd9923dcada848c6b9a7c.png?size=1024"
+        <div className="dark:bg-bg_dark text-white w-full min-h-screen">
+            <div style={{
+                background:'linear-gradient(-45deg, #FAB85C, #E053A8, #6E87F5, #59DE90, #FFF266)',
+                backgroundSize: '500% 500%',
+                animation: 'gradient 10s ease-in-out infinite',
+                position:'absolute',
+                zIndex: '-1'
+            }}
+            className="w-full h-80 shadow-md "
             />
-            <div className="flex  justify-center pt-16 m-auto max-w-5xl ">
+            <NavBar title={title}/>
+            <div className="flex justify-center m-auto max-w-6xl">
                 <Switch>
                     <Route path="/" exact>
-                        <Home title={title}/>
+                       <Home title={title}/>
                     </Route>
                 </Switch>
             </div>
