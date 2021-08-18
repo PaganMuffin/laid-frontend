@@ -22,10 +22,12 @@ const CreateLink = ({location}) => {
 
     useEffect(() => {
        const id = location.pathname.split('/').pop()
-       setLink("https://cda.pl/video/" + id)
-       fetch(`https://backend.pamu.ga/json/${id}`)
-       .then((f) => f.json())
-       .then(f_json => setInfo(f_json) )
+       if(id){
+           setLink("https://cda.pl/video/" + id)
+           fetch(`https://backend.pamu.ga/json/${id}`)
+           .then((f) => f.json())
+           .then(f_json => setInfo(f_json) )
+       }
          
     },[location.pathname])
 
