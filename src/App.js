@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Route, Switch, useLocation } from "react-router-dom";
 import NavBar from "./component/NavBar";
 import Home from "./pages/Home";
-const title = "Laid"
+const title = "PaMu"
 
 
 const App = (props) => {
