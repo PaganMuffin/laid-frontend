@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Route, Switch, useLocation } from "react-router-dom";
 import NavBar from "./component/NavBar";
 import Home from "./pages/Home";
-const title = "NomNom"
+const title = "Laid"
 
 
 const App = (props) => {
@@ -23,13 +23,13 @@ const App = (props) => {
                 position:'absolute',
                 zIndex: '-1'
             }}
-            className="w-full h-80 shadow-md "
+            className="w-full h-72 shadow-md "
             />
             <NavBar title={title}/>
-            <div className="flex justify-center m-auto max-w-6xl">
+            <div className="flex justify-center items-center m-auto max-w-6xl">
                 <Switch>
-                    <Route path="/" exact>
-                       <Home title={title}/>
+                    <Route path="/">
+                       <Home location={location} title={title}/>
                     </Route>
                 </Switch>
             </div>

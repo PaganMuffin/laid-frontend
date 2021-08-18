@@ -1,70 +1,30 @@
-# Getting Started with Create React App
+{links.length > 0 ?
+    <div className={` flex w-full px-2 py-5 rounded-md flex-col bg-white space-y-2`}>
+        
+        {links.slice(0,5).map(x => <Row link={x['cda_id']} short={x['short']} />)}
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+        {links.length > 5 ? 
+        <button className="transition duration-500 ease-in-out shadow-md h-12 px-3 py-2 font-semibold bg-cyan-300 hover:bg-cyan-400  rounded-md">Pokaż wszystkie linki</button>
+        : null}
+    </div>
+: null}
 
-## Available Scripts
 
-In the project directory, you can run:
 
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+    const Row = ({link, short}) => {
+        return (
+            <div 
+                className="flex py-2 space-y-2 md:space-y-0 md:flex-row flex-col justify-between md:items-center px-5 rounded-md bg-opacity-10" 
+                style={{
+                    background:'linear-gradient(25deg, #59D3DE, #66FF93)',
+                    backgroundSize: '100% 200%',
+                }}
+            >
+                <span className="truncate max-w-md px-1 ">https://cda.pl/video/{link}</span>
+                <span className=" md:items-center space-y-2 md:space-y-0 flex md:flex-row flex-col">
+                    <span className="w-56 px-1 text-left font-medium text-blue-800">{short}</span>
+                    <button className="transition duration-500 ease-in-out shadow-md h-full px-2 py-1 font-semibold bg-cyan-300 hover:bg-cyan-400 rounded-md">Kopiuj</button>
+                </span>
+            </div>
+        )
+    }
