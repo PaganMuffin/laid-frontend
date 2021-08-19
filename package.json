@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.2.0",
+    "@headlessui/react": "^1.4.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
@@ -14,8 +15,8 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "start": "craco start",
-    "build": "craco build",
+    "start": "REACT_APP_API_URL=http://localhost:8787 craco  start",
+    "build": "REACT_APP_API_URL=https://backend.pamu.ga craco build",
     "test": "craco test",
     "eject": "react-scripts eject"
   },

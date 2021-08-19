@@ -18,7 +18,8 @@ module.exports = {
       cyan: colors.cyan,
       fuchsia: colors.fuchsia,
       rose: colors.rose,
-      blue: colors.blue
+      blue: colors.blue,
+      green: colors.green
     },
     screens: {
       'sm': '640px',

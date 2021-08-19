@@ -1,18 +1,16 @@
-import { useEffect, useState } from "react"
+import { Fragment, useEffect, useRef, useState } from "react"
 import { useHistory } from "react-router-dom"
-
-
-
-
+import { Dialog, Transition } from '@headlessui/react'
 
 
 const CreateLink = ({location}) => {
     const history = useHistory()
-
     const [info, setInfo] = useState(null)
     const [link, setLink] = useState('')
     const [isCorrect, setIsCorrect] = useState(true)
     const [viewPlayer, setViewPlayer] = useState(false)
+    const [isOpen, setIsOpen] = useState(false)
+    const iframe_to_copy = useRef(null)
 
     const info_codes = {
         '404':'Nie znaleziono video.',
@@ -20,17 +18,28 @@ const CreateLink = ({location}) => {
         '400':'Wideo premium.'
     }
 
+
+
     useEffect(() => {
        const id = location.pathname.split('/').pop()
        if(id){
            setLink("https://cda.pl/video/" + id)
-           fetch(`https://backend.pamu.ga/json/${id}`)
+           fetch(`${process.env.REACT_APP_API_URL}/json/${id}`)
            .then((f) => f.json())
-           .then(f_json => setInfo(f_json) )
+           .then(f_json => {
+                setInfo(f_json) 
+           })
        }
          
     },[location.pathname])
 
+    const closeModal = () => {
+        setIsOpen(false)
+      }
+    
+    const openModal = () => {
+        setIsOpen(true)
+    }
 
     const gen_url = async () => {
         setInfo(null)
@@ -43,7 +52,104 @@ const CreateLink = ({location}) => {
         }
     }
 
+    const Embed_dialog = () => {
+        const id = link.match(/https?:\/\/(?:(?:www\.)?cda\.pl\/video|ebd\.cda\.pl\/[0-9]+x[0-9]+)\/(?<id>[0-9a-z]+)/)[1]
 
+        const iframe_text = `<iframe src="${process.env.REACT_APP_API_URL}/player/${id}" width="560" height="315" frameborder="0" allow="autoplay; clipboard-write; picture-in-picture" allowfullscreen/>`
+
+        const select_iframe = () => {
+            iframe_to_copy.current.select()
+            //navigator.clipboard.writeText(iframe_text)
+        }
+
+        const copy_iframe = () => {
+            iframe_to_copy.current.select()
+            navigator.clipboard.writeText(iframe_text)
+        }
+
+        return (
+            <Transition appear show={isOpen} as={Fragment}>
+            <Dialog
+              as="div"
+              className="fixed inset-0 z-10 overflow-y-auto"
+              onClose={closeModal}
+            >
+                <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
+                <div className="min-h-screen px-4 text-center">
+                    <Transition.Child
+                        as={Fragment}
+                        enter="ease-out duration-300"
+                        enterFrom="opacity-0"
+                        enterTo="opacity-100"
+                        leave="ease-in duration-200"
+                        leaveFrom="opacity-100"
+                        leaveTo="opacity-0"
+                    >
+                        <Dialog.Overlay className="fixed inset-0" />
+                    </Transition.Child>
+        
+                    {/* This element is to trick the browser into centering the modal contents. */}
+                    <span
+                        className="inline-block h-screen align-middle"
+                        aria-hidden="true"
+                    >
+                        &#8203;
+                    </span>
+
+                    <Transition.Child
+                        as={Fragment}
+                        enter="ease-out duration-300"
+                        enterFrom="opacity-0 scale-95"
+                        enterTo="opacity-100 scale-100"
+                        leave="ease-in duration-200"
+                        leaveFrom="opacity-100 scale-100"
+                        leaveTo="opacity-0 scale-95"
+                    >
+                    <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+                        <Dialog.Title
+                            as="h3"
+                            className="text-lg font-medium leading-6 text-gray-900"
+                        >
+                            Kod do umieszczenia na stronie
+                        </Dialog.Title>
+                        <div className="mt-2 bg-black bg-opacity-10 p-2 rounded-2xl h-36">
+                            <textarea 
+                                ref={iframe_to_copy}
+                                value={iframe_text}
+                                onClick={select_iframe}
+                                className="bg-transparent w-full h-full outline-none resize-none "
+                                id="iframe_textarea"
+                                autoComplete="off"
+                                autoCapitalize="none"
+                                placeholder=""
+                                readOnly
+                                spellCheck="false"
+                                aria-describedby=""
+                                aria-labelledby="paper-input-label-3"
+                            ></textarea>
+                        </div>
+
+                        <div className="mt-4 flex justify-between">
+                            <button
+                                className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
+                                onClick={closeModal}
+                            >
+                                Zamknij
+                            </button>
+                            <button
+                                className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white  bg-green-500 rounded-md hover:bg-green-600 "
+                                onClick={copy_iframe}
+                            >
+                                Kopiuj do schowka
+                            </button>
+                        </div>
+                    </div>
+                    </Transition.Child>
+                </div>
+            </Dialog>
+          </Transition>
+        )
+    }
 
     const Show_data = ({info}) => {
         const id = link.match(/https?:\/\/(?:(?:www\.)?cda\.pl\/video|ebd\.cda\.pl\/[0-9]+x[0-9]+)\/(?<id>[0-9a-z]+)/)[1]
@@ -54,7 +160,7 @@ const CreateLink = ({location}) => {
                         <iframe
                             className="w-full rounded-md"
                             style={{aspectRatio:"16/9"}}
-                            src={`https://backend.pamu.ga/player/${id}`}
+                            src={`${process.env.REACT_APP_API_URL}/player/${id}`}
                             allow="autoplay"
                             frameBorder="0"
                             allowFullScreen
@@ -83,11 +189,18 @@ const CreateLink = ({location}) => {
                     </div>
                 
                 }
-                <div className="sm:w-full flex justify-center items-center flex-col-reverse">
+                <div className="sm:w-full  flex justify-center items-center flex-col-reverse">
+                    <button
+                        onClick={openModal}
+                        className="px-2 transition duration-500 ease-in-out bg-blue-500  hover:bg-blue-600 py-1 w-64  my-1 rounded-lg text-white font-semibold"
+                    >
+                        Embed na stronę
+                    </button>
+                    <Embed_dialog />
                     {info.qualities.map((x) => {
                         return (
                             <a key={x.resolution} href={x.url} download target="_blank" className="flex flex-row h-9 my-1 justify-center items-center">
-                                <button className="px-2 py-1 w-64 bg-blue-500 rounded-lg text-white">Pobierz {x.resolution}</button>
+                                <button className="px-2 py-1 w-64 bg-blue-500 rounded-lg text-white font-semibold transition duration-500 ease-in-out hover:bg-blue-600 ">Pobierz {x.resolution}</button>
                             </a>
                         )
                     })}
