@@ -15,8 +15,8 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "start": "REACT_APP_API_URL=http://localhost:8787 craco  start",
-    "build": "REACT_APP_API_URL=https://backend.pamu.ga craco build",
+    "start": "REACT_APP_TITLE=Laid REACT_APP_API_URL=http://localhost:8787 craco  start",
+    "build": "REACT_APP_TITLE=Laid REACT_APP_API_URL=https://backend.pamu.ga craco build",
     "test": "craco test",
     "eject": "react-scripts eject"
   },
