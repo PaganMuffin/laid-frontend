@@ -9,6 +9,8 @@ const CreateLink = ({location}) => {
     const [link, setLink] = useState('')
     const [isCorrect, setIsCorrect] = useState(true)
     const [viewPlayer, setViewPlayer] = useState(false)
+    const [cdaId, setCdaId] = useState(null)
+
     const [isOpen, setIsOpen] = useState(false)
     const iframe_to_copy = useRef(null)
 
@@ -22,6 +24,7 @@ const CreateLink = ({location}) => {
 
     useEffect(() => {
        const id = location.pathname.split('/').pop()
+       setCdaId(id)
        if(id){
            setLink("https://cda.pl/video/" + id)
            fetch(`${process.env.REACT_APP_API_URL}/json/${id}`)
@@ -29,6 +32,8 @@ const CreateLink = ({location}) => {
            .then(f_json => {
                 setInfo(f_json) 
            })
+       } else {
+           history.push('/')
        }
          
     },[location.pathname])
@@ -46,6 +51,7 @@ const CreateLink = ({location}) => {
         if(/https?:\/\/(?:(?:www\.)?cda\.pl\/video|ebd\.cda\.pl\/[0-9]+x[0-9]+)\/(?<id>[0-9a-z]+)/.test(link)){
             setIsCorrect(true)
             const id = link.match(/https?:\/\/(?:(?:www\.)?cda\.pl\/video|ebd\.cda\.pl\/[0-9]+x[0-9]+)\/(?<id>[0-9a-z]+)/)[1]
+            setCdaId(id)
             history.push('/video/' + id)
         } else {
             setIsCorrect(false)
@@ -154,9 +160,9 @@ const CreateLink = ({location}) => {
     const Show_data = ({info}) => {
         const id = link.match(/https?:\/\/(?:(?:www\.)?cda\.pl\/video|ebd\.cda\.pl\/[0-9]+x[0-9]+)\/(?<id>[0-9a-z]+)/)[1]
         return (
-            <div className="flex sm:flex-row flex-col justify-center items-center space-y-5 sm:space-y-0">
+            <div className="flex md:flex-row flex-col justify-center items-center space-y-5 md:space-y-0">
                 {viewPlayer ?
-                    <div className="w-full">
+                    <div className=" w-full">
                         <iframe
                             className="w-full rounded-md"
                             style={{aspectRatio:"16/9"}}
@@ -169,7 +175,7 @@ const CreateLink = ({location}) => {
 
                 :
 
-                    <div className="relative sm:w-full">
+                    <div className="relative md:w-full">
                         <img className="rounded-lg" src={info.thumb}/>
                         <div className="absolute text-white font-semibold top-0 h-24 w-full rounded-t-lg" style={{background: 'linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.5) 100%)'}}>
                             <p className="px-2 py-2">
@@ -189,18 +195,32 @@ const CreateLink = ({location}) => {
                     </div>
                 
                 }
-                <div className="sm:w-full  flex justify-center items-center flex-col-reverse">
-                    <button
-                        onClick={openModal}
-                        className="px-2 transition duration-500 ease-in-out bg-blue-500  hover:bg-blue-600 py-1 w-64  my-1 rounded-lg text-white font-semibold"
-                    >
-                        Embed na stronę
-                    </button>
+                <div className="md:w-full  flex justify-center items-center flex-col-reverse">
+                    <div className="flex md:flex-row flex-col md:space-x-2 w-80">
+                        <a
+                            href={`${process.env.REACT_APP_API_URL}/player/${cdaId}`}
+                            
+                        >
+                            <button
+                                className="px-2  w-full transition duration-500 ease-in-out bg-blue-500  hover:bg-blue-600 py-1 my-1 rounded-lg text-white font-semibold"
+                            >
+                                Odtwórz w nowej karcie
+                            </button>
+                        </a>
+                        
+                        <button
+                            onClick={openModal}
+                            className="px-2 transition duration-500 ease-in-out bg-blue-500  hover:bg-blue-600 py-1 my-1 rounded-lg text-white font-semibold"
+                        >
+                            Embed na stronę
+                        </button>
+
+                    </div>
                     <Embed_dialog />
                     {info.qualities.map((x) => {
                         return (
                             <a key={x.resolution} href={x.url} download target="_blank" className="flex flex-row h-9 my-1 justify-center items-center">
-                                <button className="px-2 py-1 w-64 bg-blue-500 rounded-lg text-white font-semibold transition duration-500 ease-in-out hover:bg-blue-600 ">Pobierz {x.resolution}</button>
+                                <button className="px-2 py-1 w-80 h-full bg-blue-500 rounded-lg text-white font-semibold transition duration-500 ease-in-out hover:bg-blue-600 ">Pobierz {x.resolution}</button>
                             </a>
                         )
                     })}
