@@ -7,10 +7,11 @@ const title = process.env.REACT_APP_TITLE
 
 const App = (props) => {
 
-    const [isDark, setIsDark] = useState(false)
+    const [isDark, setIsDark] = useState(true)
 
     let location = useLocation()
     useEffect(() => {
+        document.documentElement.classList.add('dark')
         document.body.classList.add('bg-bg_dark')
         document.body.classList.add('dark:bg-opacity-90')
         document.body.classList.add('bg-opacity-20')
@@ -34,8 +35,8 @@ const App = (props) => {
                 <NavBar title={title} onMode={setIsDark} />
                 <div className="flex justify-center items-center m-auto max-w-6xl">
                     <Switch>
-                        <Route path="/">
-                        <Home location={location} title={title}/>
+                        <Route exact path={["/", "/video/:id"]}>
+                            <Home location={location} title={title}/>
                         </Route>
                     </Switch>
                 </div>

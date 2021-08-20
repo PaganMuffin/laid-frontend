@@ -34,6 +34,8 @@ const CreateLink = ({location}) => {
            })
        } else {
            history.push('/')
+           setInfo(null)
+           setLink('')
        }
          
     },[location.pathname])

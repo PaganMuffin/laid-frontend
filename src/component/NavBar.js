@@ -1,8 +1,10 @@
 import { useState } from "react"
+import { Link } from "react-router-dom"
+import { SwitchMode } from "./DMSwitch"
 
 const Menu = ({title, onMode}) => {
 
-    const [isDark, setIsDark] = useState(false)
+    const [isDark, setIsDark] = useState(true)
 
     const change_mode = () => {
         isDark ? document.documentElement.classList.remove('dark') : document.documentElement.classList.add('dark')
@@ -10,13 +12,19 @@ const Menu = ({title, onMode}) => {
         isDark ? onMode(false) :onMode(true)
     }
 
+
     return (
-        <div className="space-x-5 hidden md:block">
-            <button className="font-semibold hover:bg-black hover:bg-opacity-10 px-3 py-2 rounded-lg">Strona Główna</button>
-            <button className="font-semibold hover:bg-black hover:bg-opacity-10 px-3 py-2 rounded-lg">API</button>
+        <div className="md:flex flex-row items-center space-x-5 hidden">
+            <Link to='/'>
+                <button className="font-semibold hover:bg-black hover:bg-opacity-10 px-3 py-2 rounded-lg">Strona Główna</button>
+            </Link>
+            <Link to="/api">
+                <button className="font-semibold hover:bg-black hover:bg-opacity-10 px-3 py-2 rounded-lg">API</button>
+
+            </Link>
             <button className="font-semibold hover:bg-black hover:bg-opacity-10 px-3 py-2 rounded-lg">FAQ</button>
             <button className="font-semibold hover:bg-black hover:bg-opacity-10 px-3 py-2 rounded-lg">O {title}</button>
-            <button onClick={change_mode} className="font-semibold hover:bg-black hover:bg-opacity-10 px-3 py-2 rounded-lg">Dark Mode</button>
+            <SwitchMode enabled={isDark} setEnabled={change_mode}/>
             
         </div>
     )
