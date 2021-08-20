@@ -80,7 +80,7 @@ const CreateLink = ({location}) => {
               className="fixed inset-0 z-10 overflow-y-auto"
               onClose={closeModal}
             >
-                <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
+                <Dialog.Overlay className="fixed inset-0 bg-black opacity-40" />
                 <div className="min-h-screen px-4 text-center">
                     <Transition.Child
                         as={Fragment}
@@ -111,45 +111,48 @@ const CreateLink = ({location}) => {
                         leaveFrom="opacity-100 scale-100"
                         leaveTo="opacity-0 scale-95"
                     >
-                    <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
-                        <Dialog.Title
-                            as="h3"
-                            className="text-lg font-medium leading-6 text-gray-900"
-                        >
-                            Kod do umieszczenia na stronie
-                        </Dialog.Title>
-                        <div className="mt-2 bg-black bg-opacity-10 p-2 rounded-2xl h-36">
-                            <textarea 
-                                ref={iframe_to_copy}
-                                value={iframe_text}
-                                onClick={select_iframe}
-                                className="bg-transparent w-full h-full outline-none resize-none "
-                                id="iframe_textarea"
-                                autoComplete="off"
-                                autoCapitalize="none"
-                                placeholder=""
-                                readOnly
-                                spellCheck="false"
-                                aria-describedby=""
-                                aria-labelledby="paper-input-label-3"
-                            ></textarea>
-                        </div>
+                        <div className="inline-block w-full max-w-md  my-8 overflow-hidden text-left align-middle transition-all transform bg-bg_dark shadow-xl rounded-2xl">
+                            <div className="bg-white dark:bg-opacity-20 p-4">
+                                <Dialog.Title
+                                    as="h3"
+                                    className="text-lg font-medium leading-6 text-gray-900 dark:text-white"
+                                >
+                                    Kod do umieszczenia na stronie
+                                </Dialog.Title>
+                                <div className="mt-2 bg-black bg-opacity-10 dark:bg-white dark:bg-opacity-70 p-2 rounded-2xl h-36">
+                                    <textarea 
+                                        ref={iframe_to_copy}
+                                        value={iframe_text}
+                                        onClick={select_iframe}
+                                        className="bg-transparent w-full h-full outline-none resize-none  "
+                                        id="iframe_textarea"
+                                        autoComplete="off"
+                                        autoCapitalize="none"
+                                        placeholder=""
+                                        readOnly
+                                        spellCheck="false"
+                                        aria-describedby=""
+                                        aria-labelledby="paper-input-label-3"
+                                    ></textarea>
+                                </div>
 
-                        <div className="mt-4 flex justify-between">
-                            <button
-                                className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
-                                onClick={closeModal}
-                            >
-                                Zamknij
-                            </button>
-                            <button
-                                className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white  bg-green-500 rounded-md hover:bg-green-600 "
-                                onClick={copy_iframe}
-                            >
-                                Kopiuj do schowka
-                            </button>
+                                <div className="mt-4 flex justify-between">
+                                    <button
+                                        className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
+                                        onClick={closeModal}
+                                    >
+                                        Zamknij
+                                    </button>
+                                    <button
+                                        className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white  bg-green-500 rounded-md hover:bg-green-600 "
+                                        onClick={copy_iframe}
+                                    >
+                                        Kopiuj do schowka
+                                    </button>
+                                </div>
+                            </div>
+
                         </div>
-                    </div>
                     </Transition.Child>
                 </div>
             </Dialog>
@@ -160,7 +163,7 @@ const CreateLink = ({location}) => {
     const Show_data = ({info}) => {
         const id = link.match(/https?:\/\/(?:(?:www\.)?cda\.pl\/video|ebd\.cda\.pl\/[0-9]+x[0-9]+)\/(?<id>[0-9a-z]+)/)[1]
         return (
-            <div className="flex md:flex-row flex-col justify-center items-center space-y-5 md:space-y-0">
+            <div className=" flex md:flex-row flex-col justify-center items-center space-y-5 md:space-y-0">
                 {viewPlayer ?
                     <div className=" w-full">
                         <iframe
@@ -195,7 +198,7 @@ const CreateLink = ({location}) => {
                     </div>
                 
                 }
-                <div className="md:w-full  flex justify-center items-center flex-col-reverse">
+                <div className=" md:w-full  flex justify-center items-center flex-col-reverse">
                     <div className="flex md:flex-row flex-col md:space-x-2 w-80">
                         <a
                             href={`${process.env.REACT_APP_API_URL}/player/${cdaId}`}
@@ -232,13 +235,16 @@ const CreateLink = ({location}) => {
     return (
         <div className="w-full px-5 text-black max-w-4xl flex flex-col space-y-7 items-center" >
 
-            <div className="flex flex-col w-full justify-center md:flex-row md:w-full ">
+            <div className="flex flex-col w-full justify-center md:w-full ">
                 <p className={`${isCorrect ? 'hidden' : null}`}>Błędny adres</p>
-                <input onChange={(e) => setLink(e.target.value)} value={link} className={`shadow-md outline-none md:w-full h-12 px-2 md:rounded-l-md md:rounded-r-none rounded-t-md`} placeholder="Link..."/>
-                <button onClick={gen_url} className="transition duration-500 ease-in-out shadow-md h-12 px-3 py-2 font-semibold bg-cyan-300 hover:bg-cyan-400 md:rounded-r-md md:rounded-l-none rounded-b-md">Generuj</button>
+                <div className="flex md:flex-row w-full flex-col">
+                    <input onChange={(e) => setLink(e.target.value)} value={link} className="dark:bg-white dark:bg-opacity-10 dark:text-white shadow-md outline-none w-full h-12 px-2 md:rounded-l-md md:rounded-r-none rounded-t-md" placeholder="Link..."/>
+
+                    <button onClick={gen_url} className="transition duration-500 ease-in-out shadow-md h-12 px-3 py-2 font-semibold  bg-cyan-300 hover:bg-cyan-400 md:rounded-r-md md:rounded-l-none rounded-b-md dark:bg-cyan-600 dark:hover:bg-cyan-700 dark:text-white">Generuj</button>
+                </div>
             </div>
             {info ?
-                <div className="flex w-full  px-2 py-2 rounded-md flex-col bg-white space-y-2 shadow-lg">
+                <div className="dark:bg-white dark:bg-opacity-10 dark:text-white flex w-full  px-2 py-2 rounded-md flex-col bg-white space-y-2 shadow-lg">
                     {info['code'] !== 200 ? <p>{info_codes[info['code']]}</p> : <Show_data info={info['data']}/>}
                 </div>
             : null}

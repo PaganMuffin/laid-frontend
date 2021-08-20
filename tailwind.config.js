@@ -44,6 +44,9 @@ module.exports = {
       },
       backgroundOpacity: {
           '8':'0.08'
+      },
+      invert: {
+          70: '.70'
       }
     },
   },
