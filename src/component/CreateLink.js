@@ -56,14 +56,14 @@ const CreateLink = ({location}) => {
             setCdaId(id)
             history.push('/video/' + id)
         } else {
+            
             setIsCorrect(false)
         }
     }
 
     const Embed_dialog = () => {
-        const id = link.match(/https?:\/\/(?:(?:www\.)?cda\.pl\/video|ebd\.cda\.pl\/[0-9]+x[0-9]+)\/(?<id>[0-9a-z]+)/)[1]
 
-        const iframe_text = `<iframe src="${process.env.REACT_APP_API_URL}/player/${id}" width="560" height="315" frameborder="0" allow="autoplay; clipboard-write; picture-in-picture" allowfullscreen/>`
+        const iframe_text = `<iframe src="${process.env.REACT_APP_API_URL}/player/${cdaId}" width="560" height="315" frameborder="0" allow="autoplay; clipboard-write; picture-in-picture" allowfullscreen/>`
 
         const select_iframe = () => {
             iframe_to_copy.current.select()
@@ -163,86 +163,93 @@ const CreateLink = ({location}) => {
     }
 
     const Show_data = ({info}) => {
-        const id = link.match(/https?:\/\/(?:(?:www\.)?cda\.pl\/video|ebd\.cda\.pl\/[0-9]+x[0-9]+)\/(?<id>[0-9a-z]+)/)[1]
+
         return (
-            <div className=" flex md:flex-row flex-col justify-center items-center space-y-5 md:space-y-0">
-                {viewPlayer ?
-                    <div className=" w-full">
-                        <iframe
-                            className="w-full rounded-md"
-                            style={{aspectRatio:"16/9"}}
-                            src={`${process.env.REACT_APP_API_URL}/player/${id}`}
-                            allow="autoplay"
-                            frameBorder="0"
-                            allowFullScreen
-                        />
-                    </div>
-
-                :
-
-                    <div className="relative md:w-full">
-                        <img className="rounded-lg" src={info.thumb}/>
-                        <div className="absolute text-white font-semibold top-0 h-24 w-full rounded-t-lg" style={{background: 'linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.5) 100%)'}}>
-                            <p className="px-2 py-2">
-                                {info.title}
-                            </p>
+            <div className="flex flex-col space-y-2">
+                <p className="font-semibold text-2xl">
+                    {info['title']}
+                </p>
+                <div className=" flex md:flex-row flex-col justify-center items-center space-y-5 md:space-y-0">
+                    {viewPlayer ?
+                        <div className=" w-full">
+                            <iframe
+                                className="w-full rounded-md"
+                                style={{aspectRatio:"16/9"}}
+                                src={`${process.env.REACT_APP_API_URL}/player/${cdaId}`}
+                                allow="autoplay"
+                                frameBorder="0"
+                                allowFullScreen
+                            />
                         </div>
-                        <div className="absolute text-white bottom-3 right-3" >
-                            <p className="bg-black bg-opacity-70 px-2 py-1 rounded-md font-semibold">
-                                {info.duration}
-                            </p>
-                        </div>
-                        <button onClick={() => setViewPlayer(true)} className="absolute rounded-full h-12 w-12 flex items-center justify-center " style={{top:'50%', left:'50%', transform:'translate(-50%,-50%)', backgroundColor:'#00b3ff'}}>
-                            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-player-play" width="20" height="20" viewBox="0 0 24 24" strokeWidth="2.5" stroke="#ffffff" fill="#ffffff" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M7 4v16l13 -8z" />
-                            </svg>
-                        </button>
-                    </div>
-                
-                }
-                <div className=" md:w-full  flex justify-center items-center flex-col-reverse">
-                    <div className="flex md:flex-row flex-col md:space-x-2 w-80">
-                        <a
-                            href={`${process.env.REACT_APP_API_URL}/player/${cdaId}`}
-                            
-                        >
-                            <button
-                                className="px-2  w-full transition duration-500 ease-in-out bg-blue-500  hover:bg-blue-600 py-1 my-1 rounded-lg text-white font-semibold"
-                            >
-                                Odtwórz w nowej karcie
+    
+                    :
+    
+                        <div className="relative md:w-full">
+                            <img className="rounded-lg" src={info.thumb}/>
+                            <div className="absolute text-white font-semibold top-0 h-24 w-full rounded-t-lg" style={{background: 'linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.5) 100%)'}}>
+                                <p className="px-2 py-2">
+                                    {info.title}
+                                </p>
+                            </div>
+                            <div className="absolute text-white bottom-3 right-3" >
+                                <p className="bg-black bg-opacity-70 px-2 py-1 rounded-md font-semibold">
+                                    {info.duration}
+                                </p>
+                            </div>
+                            <button onClick={() => setViewPlayer(true)} className="absolute rounded-full h-12 w-12 flex items-center justify-center " style={{top:'50%', left:'50%', transform:'translate(-50%,-50%)', backgroundColor:'#00b3ff'}}>
+                                <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-player-play" width="20" height="20" viewBox="0 0 24 24" strokeWidth="2.5" stroke="#ffffff" fill="#ffffff" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M7 4v16l13 -8z" />
+                                </svg>
                             </button>
-                        </a>
-                        
-                        <button
-                            onClick={openModal}
-                            className="px-2 transition duration-500 ease-in-out bg-blue-500  hover:bg-blue-600 py-1 my-1 rounded-lg text-white font-semibold"
-                        >
-                            Embed na stronę
-                        </button>
-
-                    </div>
-                    <Embed_dialog />
-                    {info.qualities.map((x) => {
-                        return (
-                            <a key={x.resolution} href={x.url} download target="_blank" className="flex flex-row h-9 my-1 justify-center items-center">
-                                <button className="px-2 py-1 w-80 h-full bg-blue-500 rounded-lg text-white font-semibold transition duration-500 ease-in-out hover:bg-blue-600 ">Pobierz {x.resolution}</button>
+                        </div>
+                    
+                    }
+                    <div className=" md:w-full  flex justify-center items-center flex-col-reverse">
+                        <div className="flex md:flex-row flex-col md:space-x-2 w-80">
+                            <a
+                                href={`${process.env.REACT_APP_API_URL}/player/${cdaId}`}
+                                target="_blank"
+                                
+                            >
+                                <button
+                                    className="px-2  w-full transition duration-500 ease-in-out bg-blue-500  hover:bg-blue-600 py-1 my-1 rounded-lg text-white font-semibold"
+                                >
+                                    Odtwórz w nowej karcie
+                                </button>
                             </a>
-                        )
-                    })}
+                            
+                            <button
+                                onClick={openModal}
+                                className="px-2 transition duration-500 ease-in-out bg-blue-500  hover:bg-blue-600 py-1 my-1 rounded-lg text-white font-semibold"
+                            >
+                                Embed na stronę
+                            </button>
+    
+                        </div>
+                        <Embed_dialog />
+                        {info.qualities.map((x) => {
+                            return (
+                                <a key={x.resolution} href={x.url} download target="_blank" className="flex flex-row h-9 my-1 justify-center items-center">
+                                    <button className="px-2 py-1 w-80 h-full bg-blue-500 rounded-lg text-white font-semibold transition duration-500 ease-in-out hover:bg-blue-600 ">Pobierz {x.resolution}</button>
+                                </a>
+                            )
+                        })}
+                    </div>
                 </div>
+           
             </div>
-        )
+            )
     }
 
     return (
         <div className="w-full px-5 text-black max-w-4xl flex flex-col space-y-7 items-center" >
 
-            <div className="flex flex-col w-full justify-center md:w-full ">
-                <p className={`${isCorrect ? 'hidden' : null}`}>Błędny adres</p>
+            <div className="flex flex-col w-full justify-center md:w-full space-y-2">
+                <p className={`${isCorrect ? 'hidden' : null} w-full text-center font-bold text-lg rounded-lg text-white bg-red-400 py-2`}>Błędny adres</p>
                 <div className="flex md:flex-row w-full flex-col">
                     <input onChange={(e) => setLink(e.target.value)} value={link} className="dark:bg-white dark:bg-opacity-10 dark:text-white shadow-md outline-none w-full h-12 px-2 md:rounded-l-md md:rounded-r-none rounded-t-md" placeholder="Link..."/>
 
-                    <button onClick={gen_url} className="transition duration-500 ease-in-out shadow-md h-12 px-3 py-2 font-semibold  bg-cyan-300 hover:bg-cyan-400 md:rounded-r-md md:rounded-l-none rounded-b-md dark:bg-cyan-600 dark:hover:bg-cyan-700 dark:text-white">Generuj</button>
+                    <button onClick={gen_url} className="transition duration-500 ease-in-out shadow-md h-12 px-3 py-2 font-semibold  bg-blue-500 hover:bg-blue-600 md:rounded-r-md md:rounded-l-none rounded-b-md  text-white">Generuj</button>
                 </div>
             </div>
             {info ?

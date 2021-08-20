@@ -1,15 +1,20 @@
-import { useEffect, useState } from "react";
-import { Route, Switch, useLocation } from "react-router-dom";
+import { useEffect, useState, useContext} from "react";
+import { Route, Switch, useLocation} from "react-router-dom";
 import NavBar from "./component/NavBar";
 import Home from "./pages/Home";
+import { ThemeContext } from "./functions/dm";
+
 const title = process.env.REACT_APP_TITLE
 
 
 const App = (props) => {
+    
+    const theme = useContext(ThemeContext);
 
-    const [isDark, setIsDark] = useState(true)
+    const isDark = theme.state;
 
     let location = useLocation()
+
     useEffect(() => {
         document.documentElement.classList.add('dark')
         document.body.classList.add('bg-bg_dark')
@@ -32,7 +37,7 @@ const App = (props) => {
                 className="w-full h-72 shadow-md "
             />
             <div className=" text-white w-full min-h-screen">
-                <NavBar title={title} onMode={setIsDark} />
+                <NavBar title={title}/>
                 <div className="flex justify-center items-center m-auto max-w-6xl">
                     <Switch>
                         <Route exact path={["/", "/video/:id"]}>
@@ -41,7 +46,6 @@ const App = (props) => {
                     </Switch>
                 </div>
             </div>
-
         </div>
     );
 }
