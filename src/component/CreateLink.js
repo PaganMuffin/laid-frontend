@@ -166,7 +166,7 @@ const CreateLink = ({location}) => {
 
         return (
             <div className="flex flex-col space-y-2">
-                <p className="font-semibold text-2xl">
+                <p className="font-semibold text-xl">
                     {info['title']}
                 </p>
                 <div className=" flex md:flex-row flex-col justify-center items-center space-y-5 md:space-y-0">
