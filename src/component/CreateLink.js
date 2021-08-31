@@ -1,10 +1,11 @@
 import { Fragment, useEffect, useRef, useState } from "react"
-import { useHistory } from "react-router-dom"
+import { useHistory, useLocation } from "react-router-dom"
 import { Dialog, Transition } from '@headlessui/react'
 
 
-const CreateLink = ({location}) => {
+const CreateLink = () => {
     const history = useHistory()
+    const location = useLocation()
     const [info, setInfo] = useState(null)
     const [link, setLink] = useState('')
     const [isCorrect, setIsCorrect] = useState(true)
