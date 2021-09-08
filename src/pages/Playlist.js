@@ -1,20 +1,7 @@
-import { createRef, useEffect, useState } from "react"
+import { createRef, useEffect, useState,memo } from "react"
 import { useHistory, useParams } from "react-router-dom"
 import NavBar from "../component/NavBar"
 
-
-const GetDimensionFromRef = (ref) => {
-    const [dimensions, setDimensions] = useState({ width: 1, height: 2 })
-    useEffect(() => {
-      if (ref.current) {
-        const { current } = ref
-        const boundingRect = current.getBoundingClientRect()
-        const { width, height } = boundingRect
-        setDimensions({ width: Math.round(width), height: Math.round(height) })
-      }
-    }, [ref])
-    return dimensions
-}
 
 
 export const Playlist = () => {
@@ -23,10 +10,13 @@ export const Playlist = () => {
     const [data, setData] = useState(null)
     const [cda_id, setCda_id] = useState(null)
     const [playing_index, setPlaying_index] = useState(0)
-    
-    const player_ref = createRef()
-    const dimensions = GetDimensionFromRef(player_ref)
+    const [dimensions, setDimensions] = useState({ width: 1, height: 2 })
 
+    const player_ref = createRef()
+
+    const Image = memo(function Image({ src }) {
+        return <img src={src} className="w-28 rounded-lg" />;
+    })
 
     const get_playlist = async () => {
         const f = await fetch(`${process.env.REACT_APP_API_URL}/playlist/${params.id}`)
@@ -38,9 +28,14 @@ export const Playlist = () => {
     }
 
     useEffect(() => {
-        
+        const on_res = () => {
+            setDimensions({width:0,height:document.getElementById('iframe')?.clientHeight})
+        }
+        window.addEventListener('resize', on_res)
+        on_res()
         get_playlist()
     },[])
+
 
     const setPlayingInfo = (cda_id, idx) => {
         setPlaying_index(idx)
@@ -65,7 +60,7 @@ export const Playlist = () => {
                             `}
                             onClick={() => setPlayingInfo(x.cda_id, idx)}
                         >
-                            <img className="w-28 rounded-lg" src={x.thumb}></img>
+                            <Image src={x.thumb}/>
                             <div className="flex flex-col line-clamp-2">
                                 <p className="font-semibold line-clamp-2">{x.title}</p>
                                 <p className="line-clamp-1">{x.author}</p>
@@ -98,7 +93,7 @@ export const Playlist = () => {
                         />
                     </div>
                     <div 
-                        style={{ maxHeight:dimensions.height}} 
+                        style={{ maxHeight:dimensions.height, minHeight:'300px'}} 
                         className="lg:w-2/6 h-full mt-2 lg:mt-0 overflow-auto lg:ml-2  border-4 border-gray-700 rounded-md"
                     >
                         <p className="h-16 w-full font-semibold text-lg flex items-center text-left bg-black bg-opacity-40 px-2">
