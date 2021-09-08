@@ -1,6 +1,20 @@
-import { useEffect, useState } from "react"
+import { createRef, useEffect, useState } from "react"
 import { useHistory, useParams } from "react-router-dom"
+import NavBar from "../component/NavBar"
 
+
+const GetDimensionFromRef = (ref) => {
+    const [dimensions, setDimensions] = useState({ width: 1, height: 2 })
+    useEffect(() => {
+      if (ref.current) {
+        const { current } = ref
+        const boundingRect = current.getBoundingClientRect()
+        const { width, height } = boundingRect
+        setDimensions({ width: Math.round(width), height: Math.round(height) })
+      }
+    }, [ref])
+    return dimensions
+}
 
 
 export const Playlist = () => {
@@ -9,18 +23,22 @@ export const Playlist = () => {
     const [data, setData] = useState(null)
     const [cda_id, setCda_id] = useState(null)
     const [playing_index, setPlaying_index] = useState(0)
+    
+    const player_ref = createRef()
+    const dimensions = GetDimensionFromRef(player_ref)
+
+
     const get_playlist = async () => {
         const f = await fetch(`${process.env.REACT_APP_API_URL}/playlist/${params.id}`)
         if(f.status === 404) history.push('/404')
         if(f.status === 500) history.push('/500')
         const f_data = await f.json()
-        console.log(f_data)
-        setCda_id(f_data.data.items.sort((a,b) => a.order - b.order)[0].cda_id)
-        console.log(f_data.data.items.sort((a,b) => a.order - b.order)[0].cda_id)
+        setCda_id(f_data.data.items.sort((a,b) => a.p_order - b.p_order)[0].cda_id)
         setData(f_data.data)
     }
 
     useEffect(() => {
+        
         get_playlist()
     },[])
 
@@ -29,22 +47,48 @@ export const Playlist = () => {
         setCda_id(cda_id)
     }
 
+    const PlaylistList = () => {
+        return (
+            <>
+                {data.items.sort((a,b) => a.p_order - b.p_order).map((x, idx) => {
+                    return (
+                        <div
+                            key={x.id}
+                            className={`
+                                flex items-center
+                                w-full
+                                py-2 space-x-4
+                                px-2
+                                overflow-x-hidden
+                                ${cda_id === x.cda_id ? 'bg-white bg-opacity-20' : 'hover:bg-opacity-10 hover:bg-white'}
+                                cursor-pointer
+                            `}
+                            onClick={() => setPlayingInfo(x.cda_id, idx)}
+                        >
+                            <img className="w-28 rounded-lg" src={x.thumb}></img>
+                            <div className="flex flex-col line-clamp-2">
+                                <p className="font-semibold line-clamp-2">{x.title}</p>
+                                <p className="line-clamp-1">{x.author}</p>
+
+                            </div>
+                        </div>
+                    )
+                })}
+            </>
+        )
+    }
+
 
     return (
         <>
             {!data ? "Loading" : 
-            <div className="flex  flex-col text-white">
-                <div className="flex lg:flex-row flex-col">
-                    <div id="player" className="
-                        lg:w-4/6 w-full
-                        lg:h-screen h-full
-                        flex flex-col items-center 
-                        px-2
-                    ">
-                        <p className="h-16 w-full font-bold text-2xl flex items-center text-left">
-                            {data.name}
-                        </p>
+            <div className="flex flex-col dark:text-white">
+                <NavBar title={process.env.REACT_APP_TITLE}/>
+                <div className="flex lg:flex-row flex-col w-full h-full px-2 mt-4">
+                    <div className="lg:w-4/6 w-full ">
                         <iframe
+                            ref={player_ref}
+                            id="iframe"
                             className="w-full"
                             style={{aspectRatio:"16/9"}}
                             src={`${process.env.REACT_APP_API_URL}/player/${cda_id}`}
@@ -52,35 +96,26 @@ export const Playlist = () => {
                             frameBorder="0"
                             allowFullScreen
                         />
-                        <p className="h-16 w-full font-bold text-2xl flex items-center text-left">
-                            {data.items[playing_index].title}
-                        </p>
                     </div>
-                    <div id="list" className="lg:w-2/6 w-full lg:h-screen h-full border-l-2 border-gray-700">
-                        <p className="h-16 w-full px-2 font-regular text-lg flex items-center text-left">
+                    <div 
+                        style={{ maxHeight:dimensions.height}} 
+                        className="lg:w-2/6 h-full mt-2 lg:mt-0 overflow-auto lg:ml-2 bg-black bg-opacity-20"
+                    >
+                        <p className="h-16 w-full font-semibold text-lg flex items-center text-left bg-black bg-opacity-40 px-2">
                             {data.name} {playing_index+1}/{data.items.length}
                         </p>
-                        {data.items.sort((a,b) => a.order - b.order).map((x, idx) => {
-                            return (
-                                <div
-                                    key={x.id}
-                                    className={`
-                                        flex items-center 
-                                        py-2 space-x-4
-                                        px-2
-                                        ${cda_id === x.cda_id ? 'bg-white bg-opacity-20' : 'hover:bg-opacity-10 hover:bg-white'}
-                                        
-                                    `}
-                                    onClick={() => setPlayingInfo(x.cda_id, idx)}
-                                >
-                                    <img className="w-36 rounded-lg" src={x.thumb}></img>
-                                    <p className="font-semibold">{x.title}</p>
-                                </div>
-                            )
-                        })}
+                        <div className=" h-full">
+                            <PlaylistList/>
+                        </div>
                     </div>
                 </div>
-            </div>}
+                <div className="lg:w-4/6 lg:pl-2 px-2 h-16 w-full">
+                    <p className="font-bold text-2xl">
+                        {data.items[playing_index].title} - {data.items[playing_index].author}
+                    </p>
+                </div>
+            </div>
+            }
         </>
     )
 }

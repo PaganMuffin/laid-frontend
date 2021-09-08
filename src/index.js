@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { ThemeProvider } from './functions/dm';
+import { ThemeProvider } from './context/dm';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 

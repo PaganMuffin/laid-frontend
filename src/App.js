@@ -2,7 +2,7 @@ import { useEffect, useState, useContext} from "react";
 import { Route, Switch, useLocation} from "react-router-dom";
 import NavBar from "./component/NavBar";
 import Home from "./pages/Home";
-import { ThemeContext } from "./functions/dm";
+import { ThemeContext } from "./context/dm";
 import { Playlist } from "./pages/Playlist";
 
 const title = process.env.REACT_APP_TITLE

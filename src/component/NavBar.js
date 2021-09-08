@@ -3,7 +3,7 @@ import { Menu,Transition } from "@headlessui/react"
 import { Fragment, useState } from "react"
 import { Link } from "react-router-dom"
 import { SwitchMode } from "./DMSwitch"
-
+import { Burger, SignIn } from "./Icons"
 
 const list = [
     {
@@ -23,8 +23,9 @@ const list = [
     },
     {
         'name':'Zaloguj się',
-        'href':'/login',
-        //'Comp': () => <div className="p-5 bg-red">"TEST"</div>
+        'href':`${document.location.protocol}//app.${document.location.host}/login`,
+
+        
     },
 ]
 
@@ -35,7 +36,7 @@ const Menubar = () => {
             {list.slice(0,3).map(x => {
                 return (
                     <Link to={x.href} key={x.name}>
-                        <button className="font-semibold hover:bg-black hover:bg-opacity-20 px-2 py-2 rounded-lg">{x.name}</button>
+                        <button className="font-semibold dark:hover:bg-white hover:bg-black hover:bg-opacity-20 dark:hover:bg-opacity-20 px-2 py-2 rounded-lg">{x.name}</button>
                     </Link>
                 )
             })}
@@ -46,24 +47,13 @@ const Menubar = () => {
 }
 
 const MobileMenu = () => {
-    
-    const Burger = () => {
-        return (
-            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-menu-2" width="28" height="28" viewBox="0 0 24 24" strokeWidth="3" stroke="#ffffff" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <line x1="4" y1="6" x2="20" y2="6" />
-                <line x1="4" y1="12" x2="20" y2="12" />
-                <line x1="4" y1="18" x2="20" y2="18" />
-            </svg>
-        )
-    }
 
     return (
-        <div className="relative">
+        <div className="relative ">
             <Menu 
                 as="div"
             >
-                <Menu.Button className="text-lg font-bold hover:bg-black hover:bg-opacity-20 px-3  py-2 rounded-lg">
+                <Menu.Button className="text-lg font-bold hover:bg-black hover:bg-opacity-20 px-3 py-2 rounded-lg">
                     <Burger/>
                 </Menu.Button>
                 <Transition
@@ -76,21 +66,46 @@ const MobileMenu = () => {
                     leaveTo="transform opacity-0 scale-95"
                 >
             
-                    <Menu.Items className="flex flex-col absolute w-48 right-0 top-16 bg-bg_dark bg-opacity-70 py-2 px-2 space-y-2 rounded-lg backdrop-filter backdrop-blur-lg ">
+                    <Menu.Items className="flex flex-col absolute w-48 right-0 top-16 bg-bg_dark bg-opacity-70 py-2 px-2 space-y-2 rounded-lg backdrop-filter backdrop-blur-lg text-white">
                         {list.map(x => {
                             return (
                                 <Menu.Item key={x.name}>
-                                    {({ active }) => (
-                                    <a
-                                        className={`${active && 'bg-blue-500 rounded-md'}`}
-                                        href={x.href}
-                                    >
-                                        <span className="flex font-semibold text-lg px-3">
-                                            
-                                            {x.name}
-                                        </span>
-                                    </a>
-                                    )}
+                                    {({ active }) => {
+                                        if(x.href.includes('http')){
+                                            return (
+                                                <a
+                                                    className={`${active && 'bg-blue-500 rounded-md'}`}
+                                                    href={x.href}
+                                                    target='_parent'
+                                                >
+                                                    <button className="text-lg font-bold px-3 py-2 rounded-lg flex flex-row items-center">
+                                                        <SignIn/>
+                                                        <span>
+                                                            Zaloguj się
+
+                                                        </span>
+                                                    </button>
+                                                </a>
+                                            )
+                                        } else {
+                                            return (
+                                                <Link
+                                                    className={`${active && 'bg-blue-500 rounded-md'}`}
+                                                    to={x.href.includes('http') ? {pathname:x.href} : x.href}
+                                                    target='_parent'
+                                                >
+                                                    {x.comp ? x.comp : 
+                                                    <span className="flex font-semibold text-lg px-3">
+                                                        
+                                                        {x.name} {x.href.includes('login')}
+                                                    </span>
+                                                    }
+                                                </Link>
+                                            ) 
+                                        }
+
+                                    }
+                                    }
                                 </Menu.Item>
                             )
                         })}
@@ -118,20 +133,15 @@ const NavBar = ({title}) => {
                         <p className="text-xl font-bold px-3 py-2">{title}</p>
                     </Link>
                     <Menubar></Menubar>
-                    <Link to="login">
-                        <button className="text-lg font-bold hover:bg-black hover:bg-opacity-20 px-3 py-2 rounded-lg flex flex-row items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-login" width="28" height="28" viewBox="0 0 24 24" strokeWidth="1" stroke="#ffffff" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />
-                                <path d="M20 12h-13l3 -3m0 6l-3 -3" />
-                            </svg>
+                    <a href={`${document.location.protocol}//app.${document.location.host}/login`} target="_parent">
+                        <button className="text-lg font-bold dark:hover:bg-white hover:bg-black hover:bg-opacity-20 dark:hover:bg-opacity-20 px-3 py-2 rounded-lg flex flex-row items-center">
+                            <SignIn/>
                             <span>
                                 Zaloguj się
 
                             </span>
                         </button>
-                    
-                    </Link>
+                    </a>
                 </div>
                 <div className="w-full md:hidden items-center justify-between flex">
                     <Link to="/">
