@@ -99,12 +99,12 @@ export const Playlist = () => {
                     </div>
                     <div 
                         style={{ maxHeight:dimensions.height}} 
-                        className="lg:w-2/6 h-full mt-2 lg:mt-0 overflow-auto lg:ml-2 bg-black bg-opacity-20"
+                        className="lg:w-2/6 h-full mt-2 lg:mt-0 overflow-auto lg:ml-2  border-4 border-gray-700 rounded-md"
                     >
                         <p className="h-16 w-full font-semibold text-lg flex items-center text-left bg-black bg-opacity-40 px-2">
                             {data.name} {playing_index+1}/{data.items.length}
                         </p>
-                        <div className=" h-full">
+                        <div className="h-full">
                             <PlaylistList/>
                         </div>
                     </div>
