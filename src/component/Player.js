@@ -2,7 +2,7 @@ import Plyr from "plyr-react"
 import 'plyr-react/dist/plyr.css'
 import { useEffect, useRef, useState } from "react"
 
-export const Player = ({source, setHeight, play_next}) => {
+export const Player = ({source, setHeight}) => {
 
     const [sauce, setSauce] = useState(null)
     const ref = useRef()
@@ -19,10 +19,7 @@ export const Player = ({source, setHeight, play_next}) => {
         ref.current?.plyr.on('qualitychange', () => {
             ref.current?.plyr.play()
         })
-        ref.current?.plyr.on('ended', () => {
-            play_next()
-        })
-    })
+    },[])
 
     return (
         <>

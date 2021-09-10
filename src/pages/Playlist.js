@@ -3,6 +3,7 @@ import { useHistory, useParams } from "react-router-dom"
 import NavBar from "../component/NavBar"
 import { Player } from "../component/Player"
 import { PlaylistList } from "../component/PlaylistList"
+import { useEventListener } from "../component/useEventListener"
 
 
 
@@ -25,8 +26,10 @@ export const Playlist = () => {
     const [playlist_title, setPlaylist_title] = useState('')
 
     const ended_func = () => {
+
         if(playlist != null){
             let idx = playing_index
+            console.log(playing_index, playlist.length)
             if(idx !== playlist.length - 1){
                 setPlaying_index(idx+1)
                 setPlayingInfo(playlist[idx+1].cda_id, idx+1)
@@ -53,9 +56,9 @@ export const Playlist = () => {
 
     useEffect(() => {
         get_playlist()
-
     },[])
  
+    useEventListener('ended',ended_func, window )
 
 
     const setPlayingInfo = (cda_id, idx) => {
@@ -96,14 +99,14 @@ export const Playlist = () => {
                     <NavBar title={process.env.REACT_APP_TITLE}/>
                     <div className="flex w-full px-2 py-2">
                         <div className="flex flex-col w-full lg:w-4/6" >
-                            <Player source={source} setHeight={setHeight} play_next={ended_func}/>
+                            <Player source={source} setHeight={setHeight} />
                             <div style={{ maxHeight:height, minHeight:'300px'}}
                                 className="block lg:hidden lg:w-2/6 h-full mt-2 lg:mt-0 lg:ml-2  border-4 border-gray-700 rounded-md"
                             >
                                 <p className="h-16 w-full font-semibold text-lg flex items-center text-left bg-black bg-opacity-40 px-2">
                                     {playlist_title} {playing_index+1}/{playlist.length}
                                 </p>
-                                <div style={{height: height-64}} className="overflow-auto">
+                                <div style={{height: height-'72'}} className="overflow-auto">
                                     <PlaylistList data={playlist} setPlayingInfo={setPlayingInfo} playing_cda_id={cda_id}/> 
                                 </div>
                             </div>
@@ -117,7 +120,7 @@ export const Playlist = () => {
                             <p className="h-16 w-full font-semibold text-lg flex items-center text-left bg-black bg-opacity-40 px-2">
                                 {playlist_title} {playing_index+1}/{playlist.length}
                             </p>
-                            <div style={{height: height-68}} className="overflow-auto">
+                            <div style={{height: height-'72'}} className="overflow-auto">
                                 <PlaylistList data={playlist} setPlayingInfo={setPlayingInfo} playing_cda_id={cda_id}/> 
                             </div>
                         </div>
